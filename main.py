@@ -9,6 +9,7 @@ from hiro.hiro_utils import Subgoal
 from hiro.utils import Logger, _is_update, record_experience_to_csv, listdirs
 from hiro.models import HiroAgent, TD3Agent
 
+import gym
 import myosuite
 
 def run_evaluation(args, env, agent):
