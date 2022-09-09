@@ -9,6 +9,8 @@ from hiro.hiro_utils import Subgoal
 from hiro.utils import Logger, _is_update, record_experience_to_csv, listdirs
 from hiro.models import HiroAgent, TD3Agent
 
+import myosuite
+
 def run_evaluation(args, env, agent):
     agent.load(args.load_episode)
 
@@ -145,7 +147,9 @@ if __name__ == '__main__':
     print(experiment_name)
 
     # Environment and its attributes
-    env = EnvWithGoal(create_maze_env(args.env), args.env)
+#     env = EnvWithGoal(create_maze_env(args.env), args.env)
+    env = gym.make(args.env)
+    env = EnvWithGoal(env, args.env)
     goal_dim = 2
     state_dim = env.state_dim
     action_dim = env.action_dim
