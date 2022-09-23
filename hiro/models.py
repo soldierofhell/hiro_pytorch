@@ -394,8 +394,8 @@ class Agent():
         env.evaluate = True
         for e in range(eval_episodes):
             obs = env.reset()
-            fg = obs['desired_goal']
-            s = obs['observation']
+            fg = env.target_jnt_value
+            s = obs
             done = False
             reward_episode_sum = 0
             step = 0
