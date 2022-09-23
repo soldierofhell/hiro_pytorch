@@ -170,6 +170,7 @@ if __name__ == '__main__':
         agent = HiroAgent(
             state_dim=state_dim,
             action_dim=action_dim,
+            limits=env.action_space.low,
             goal_dim=goal_dim,
             subgoal_dim=args.subgoal_dim,
             scale_low=scale,
