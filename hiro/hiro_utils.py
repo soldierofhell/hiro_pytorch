@@ -111,7 +111,7 @@ class SubgoalActionSpace(object):
 #         limits = np.array([-10, -10, -0.5, -1, -1, -1, -1,
 #                     -0.5, -0.3, -0.5, -0.3, -0.5, -0.3, -0.5, -0.3])        
         self.shape = (dim,1)
-        self.low = limits[:dim]
+        self.low = limits[1:dim+1]
         self.high = -self.low
 
     def sample(self):
