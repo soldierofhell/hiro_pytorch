@@ -500,6 +500,7 @@ class HiroAgent(Agent):
         self,
         state_dim,
         action_dim,
+        limits,
         goal_dim,
         subgoal_dim,
         scale_low,
@@ -514,7 +515,7 @@ class HiroAgent(Agent):
         policy_freq_high,
         policy_freq_low):
 
-        limits = env.action_space.low
+#         limits = env.action_space.low
         self.subgoal = Subgoal(limits, subgoal_dim)
         scale_high = self.subgoal.action_space.high * np.ones(subgoal_dim)
 
