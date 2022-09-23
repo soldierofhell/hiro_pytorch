@@ -514,7 +514,8 @@ class HiroAgent(Agent):
         policy_freq_high,
         policy_freq_low):
 
-        self.subgoal = Subgoal(subgoal_dim)
+        limits = env.action_space.low
+        self.subgoal = Subgoal(limits, subgoal_dim)
         scale_high = self.subgoal.action_space.high * np.ones(subgoal_dim)
 
         self.model_save_freq = model_save_freq
