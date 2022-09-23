@@ -415,7 +415,7 @@ class Agent():
                 step += 1
                 self.end_step()
             else:
-                error = np.sqrt(np.sum(np.square(fg-s[:2])))
+                error = np.sqrt(np.sum(np.square(fg-s[1:24])))
                 print('Goal, Curr: (%02.2f, %02.2f, %02.2f, %02.2f)     Error:%.2f'%(fg[0], fg[1], s[0], s[1], error))
                 rewards.append(reward_episode_sum)
                 success += 1 if error <=5 else 0
