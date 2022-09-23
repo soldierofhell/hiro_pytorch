@@ -39,7 +39,7 @@ class Trainer():
         for e in np.arange(self.args.num_episode)+1:
             obs = self.env.reset()
             fg = env.target_jnt_value
-            s = obs
+            s = obs[1:]
             done = False
 
             step = 0
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     # Environment and its attributes
     env = gym.make(args.env)
     goal_dim = len(env.target_jnt_value)
-    state_dim = env.observation_space.shape[0]
+    state_dim = env.observation_space.shape[0] - 1
     action_dim = env.action_space.shape[0]
     scale = env.action_space.high * np.ones(action_dim)
 
@@ -170,7 +170,7 @@ if __name__ == '__main__':
         agent = HiroAgent(
             state_dim=state_dim,
             action_dim=action_dim,
-            limits=env.action_space.low,
+            limits=env.observation_space.low,
             goal_dim=goal_dim,
             subgoal_dim=args.subgoal_dim,
             scale_low=scale,
