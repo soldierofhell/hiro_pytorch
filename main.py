@@ -108,7 +108,7 @@ if __name__ == '__main__':
     parser.add_argument('--save_video', action='store_true')
     parser.add_argument('--sleep', type=float, default=-1)
     parser.add_argument('--eval_episodes', type=float, default=5, help='Unit = Episode')
-    parser.add_argument('--env', default='AntMaze', type=str)
+    parser.add_argument('--env', default='myoHandPoseRandom-v0', type=str)
     parser.add_argument('--td3', action='store_true')
 
     # Training
@@ -148,9 +148,7 @@ if __name__ == '__main__':
     print(experiment_name)
 
     # Environment and its attributes
-#     env = EnvWithGoal(create_maze_env(args.env), args.env)
     env = gym.make(args.env)
-    env = EnvWithGoal(env, args.env)
     goal_dim = 2
     state_dim = env.state_dim
     action_dim = env.action_dim
