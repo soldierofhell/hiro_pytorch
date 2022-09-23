@@ -580,7 +580,7 @@ class HiroAgent(Agent):
 
         # Take action
         obs, r, done, _ = env.step(a)
-        n_s = obs['observation']
+        n_s = obs
 
         ## Higher Level Controller
         # Take random action for start_training steps
