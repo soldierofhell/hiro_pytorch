@@ -149,9 +149,9 @@ if __name__ == '__main__':
 
     # Environment and its attributes
     env = gym.make(args.env)
-    goal_dim = 2
-    state_dim = env.state_dim
-    action_dim = env.action_dim
+    goal_dim = len(env.target_jnt_value)
+    state_dim = len(env.observation_space)
+    action_dim = len(env.action_space)
     scale = env.action_space.high * np.ones(action_dim)
 
     # Spawn an agent
