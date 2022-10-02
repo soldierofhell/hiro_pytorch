@@ -609,7 +609,7 @@ class HiroAgent(Agent):
         # High Replay Buffer
         if _is_update(step, self.buffer_freq, rem=1):
             if len(self.buf[6]) == self.buffer_freq:
-                self.buf[4] = s
+                self.buf[4] = s[:self.fg.shape[0]]
                 self.buf[5] = float(d)
                 self.replay_buffer_high.append(
                     state=self.buf[0],
