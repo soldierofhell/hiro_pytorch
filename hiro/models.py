@@ -395,7 +395,7 @@ class Agent():
         for e in range(eval_episodes):
             obs = env.reset()
             fg = env.target_jnt_value
-            s = obs[1:]
+            s = obs[1:(1+85)]
             done = False
             reward_episode_sum = 0
             step = 0
@@ -499,6 +499,7 @@ class HiroAgent(Agent):
     def __init__(
         self,
         state_dim,
+        state_dim_high,
         action_dim,
         limits,
         goal_dim,
@@ -522,7 +523,7 @@ class HiroAgent(Agent):
         self.model_save_freq = model_save_freq
 
         self.high_con = HigherController(
-            state_dim=state_dim,
+            state_dim=state_dim_high,
             goal_dim=goal_dim,
             action_dim=subgoal_dim,
             scale=scale_high,
@@ -548,7 +549,7 @@ class HiroAgent(Agent):
             )
 
         self.replay_buffer_high = HighReplayBuffer(
-            state_dim=state_dim,
+            state_dim=state_dim_high,
             goal_dim=goal_dim,
             subgoal_dim=subgoal_dim,
             action_dim=action_dim,
@@ -582,7 +583,7 @@ class HiroAgent(Agent):
 
         # Take action
         obs, r, done, _ = env.step(a)
-        n_s = obs[1:]
+        n_s = obs[1:(1+85)]
 
         ## Higher Level Controller
         # Take random action for start_training steps
@@ -647,7 +648,7 @@ class HiroAgent(Agent):
 
     def _choose_subgoal_with_noise(self, step, s, sg, n_s):
         if step % self.buffer_freq == 0: # Should be zero
-            sg = self.high_con.policy_with_noise(s, self.fg)
+            sg = self.high_con.policy_with_noise(s[:sg.shape[0]], self.fg)
         else:
             sg = self.subgoal_transition(s, sg, n_s)
 
@@ -658,7 +659,7 @@ class HiroAgent(Agent):
 
     def _choose_subgoal(self, step, s, sg, n_s):
         if step % self.buffer_freq == 0:
-            sg = self.high_con.policy(s, self.fg)
+            sg = self.high_con.policy(s[:sg.shape[0]], self.fg)
         else:
             sg = self.subgoal_transition(s, sg, n_s)
 
