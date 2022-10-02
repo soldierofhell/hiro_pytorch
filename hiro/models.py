@@ -621,7 +621,7 @@ class HiroAgent(Agent):
                     state_arr=np.array(self.buf[6]),
                     action_arr=np.array(self.buf[7])
                 )
-            self.buf = [s, self.fg, self.sg, 0, None, None, [], []]
+            self.buf = [s[:self.fg.shape[0]], self.fg, self.sg, 0, None, None, [], []]
 
         self.buf[3] += self.reward_scaling * r
         self.buf[6].append(s)
@@ -648,7 +648,7 @@ class HiroAgent(Agent):
 
     def _choose_subgoal_with_noise(self, step, s, sg, n_s):
         if step % self.buffer_freq == 0: # Should be zero
-            sg = self.high_con.policy_with_noise(s[:sg.shape[0]], self.fg)
+            sg = self.high_con.policy_with_noise(s[:self.fg.shape[0]], self.fg)
         else:
             sg = self.subgoal_transition(s, sg, n_s)
 
@@ -659,7 +659,7 @@ class HiroAgent(Agent):
 
     def _choose_subgoal(self, step, s, sg, n_s):
         if step % self.buffer_freq == 0:
-            sg = self.high_con.policy(s[:sg.shape[0]], self.fg)
+            sg = self.high_con.policy(s[:self.fg.shape[0]], self.fg)
         else:
             sg = self.subgoal_transition(s, sg, n_s)
 
