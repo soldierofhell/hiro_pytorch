@@ -624,7 +624,7 @@ class HiroAgent(Agent):
             self.buf = [s[:self.fg.shape[0]], self.fg, self.sg, 0, None, None, [], []]
 
         self.buf[3] += self.reward_scaling * r
-        self.buf[6].append(s)
+        self.buf[6].append(s[:self.fg.shape[0]])
         self.buf[7].append(a)
 
     def train(self, global_step):
