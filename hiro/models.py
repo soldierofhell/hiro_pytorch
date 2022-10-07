@@ -35,7 +35,7 @@ class TD3Actor(nn.Module):
         self.l3 = nn.Linear(300, action_dim)
 
     def forward(self, state, goal):
-        state = state[:self.state_dim]
+        state = state[:, :self.state_dim]
         a = F.relu(self.l1(torch.cat([state, goal], 1)))
         a = F.relu(self.l2(a))
         return self.scale * torch.tanh(self.l3(a))
@@ -54,7 +54,7 @@ class TD3Critic(nn.Module):
         self.l6 = nn.Linear(300, 1)
 
     def forward(self, state, goal, action):
-        state = state[:self.state_dim]
+        state = state[:, :self.state_dim]
         sa = torch.cat([state, goal, action], 1)
 
         q = F.relu(self.l1(sa))
