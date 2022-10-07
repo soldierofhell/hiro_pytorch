@@ -28,12 +28,14 @@ class TD3Actor(nn.Module):
         else:
             scale = get_tensor(scale)
         self.scale = nn.Parameter(scale.clone().detach().float(), requires_grad=False)
+        self.state_dim = nn.Parameter(state_dim.clone().detach().float(), requires_grad=False)
 
         self.l1 = nn.Linear(state_dim + goal_dim, 300)
         self.l2 = nn.Linear(300, 300)
         self.l3 = nn.Linear(300, action_dim)
 
     def forward(self, state, goal):
+        state = state[:self.state_dim]
         a = F.relu(self.l1(torch.cat([state, goal], 1)))
         a = F.relu(self.l2(a))
         return self.scale * torch.tanh(self.l3(a))
@@ -41,6 +43,7 @@ class TD3Actor(nn.Module):
 class TD3Critic(nn.Module):
     def __init__(self, state_dim, goal_dim, action_dim):
         super(TD3Critic, self).__init__()
+        self.state_dim = nn.Parameter(state_dim.clone().detach().float(), requires_grad=False)
         # Q1
         self.l1 = nn.Linear(state_dim + goal_dim + action_dim, 300)
         self.l2 = nn.Linear(300, 300)
@@ -51,6 +54,7 @@ class TD3Critic(nn.Module):
         self.l6 = nn.Linear(300, 1)
 
     def forward(self, state, goal, action):
+        state = state[:self.state_dim]
         sa = torch.cat([state, goal, action], 1)
 
         q = F.relu(self.l1(sa))
@@ -549,7 +553,7 @@ class HiroAgent(Agent):
             )
 
         self.replay_buffer_high = HighReplayBuffer(
-            state_dim=state_dim_high,
+            state_dim=state_dim,
             goal_dim=goal_dim,
             subgoal_dim=subgoal_dim,
             action_dim=action_dim,
@@ -609,7 +613,7 @@ class HiroAgent(Agent):
         # High Replay Buffer
         if _is_update(step, self.buffer_freq, rem=1):
             if len(self.buf[6]) == self.buffer_freq:
-                self.buf[4] = s[:self.fg.shape[0]]
+                self.buf[4] = s
                 self.buf[5] = float(d)
                 self.replay_buffer_high.append(
                     state=self.buf[0],
@@ -621,10 +625,10 @@ class HiroAgent(Agent):
                     state_arr=np.array(self.buf[6]),
                     action_arr=np.array(self.buf[7])
                 )
-            self.buf = [s[:self.fg.shape[0]], self.fg, self.sg, 0, None, None, [], []]
+            self.buf = [s, self.fg, self.sg, 0, None, None, [], []]
 
         self.buf[3] += self.reward_scaling * r
-        self.buf[6].append(s[:self.fg.shape[0]])
+        self.buf[6].append(s)
         self.buf[7].append(a)
 
     def train(self, global_step):
@@ -648,7 +652,7 @@ class HiroAgent(Agent):
 
     def _choose_subgoal_with_noise(self, step, s, sg, n_s):
         if step % self.buffer_freq == 0: # Should be zero
-            sg = self.high_con.policy_with_noise(s[:self.fg.shape[0]], self.fg)
+            sg = self.high_con.policy_with_noise(s, self.fg)
         else:
             sg = self.subgoal_transition(s, sg, n_s)
 
@@ -659,7 +663,7 @@ class HiroAgent(Agent):
 
     def _choose_subgoal(self, step, s, sg, n_s):
         if step % self.buffer_freq == 0:
-            sg = self.high_con.policy(s[:self.fg.shape[0]], self.fg)
+            sg = self.high_con.policy(s, self.fg)
         else:
             sg = self.subgoal_transition(s, sg, n_s)
 
