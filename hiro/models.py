@@ -28,7 +28,7 @@ class TD3Actor(nn.Module):
         else:
             scale = get_tensor(scale)
         self.scale = nn.Parameter(scale.clone().detach().float(), requires_grad=False)
-        self.state_dim = nn.Parameter(state_dim.clone().detach().float(), requires_grad=False)
+        self.state_dim = nn.Parameter(state_dim, requires_grad=False)
 
         self.l1 = nn.Linear(state_dim + goal_dim, 300)
         self.l2 = nn.Linear(300, 300)
@@ -43,7 +43,7 @@ class TD3Actor(nn.Module):
 class TD3Critic(nn.Module):
     def __init__(self, state_dim, goal_dim, action_dim):
         super(TD3Critic, self).__init__()
-        self.state_dim = nn.Parameter(state_dim.clone().detach().float(), requires_grad=False)
+        self.state_dim = nn.Parameter(state_dim, requires_grad=False)
         # Q1
         self.l1 = nn.Linear(state_dim + goal_dim + action_dim, 300)
         self.l2 = nn.Linear(300, 300)
