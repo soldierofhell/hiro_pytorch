@@ -187,6 +187,7 @@ if __name__ == '__main__':
             policy_freq_high=args.policy_freq_high,
             policy_freq_low=args.policy_freq_low
             )
+        agent.load(args.load_episode)
 
     # Run training or evaluation
     if args.train:
